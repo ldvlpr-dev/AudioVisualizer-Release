@@ -14,6 +14,8 @@ Install pip requirements : `pip install -r requirements.txt`
 
 Run Flask: `flask run`
 
+And finally, open the address Flask will give you. It should be something like `http://127.0.0.1:5000/`
+
 ## Credits
 
 This project uses the [librosa](https://github.com/librosa/librosa) library, version 0.8.0 : Brian McFee; Vincent Lostanlen
