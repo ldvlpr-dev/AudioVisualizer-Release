@@ -1,0 +1,149 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Pangolin&display=swap");
+
+body {
+    background-color: rgb(31, 31, 31);
+    margin: 0px;
+    background-image: url("background.png");
+    background-repeat: repeat;
+    background-attachment: fixed;
+    color: white;
+}
+
+h1 {
+    float: center;
+    width: auto;
+    margin: auto;
+    padding: 10px;
+    font-family: "Roboto", sans-serif;
+    font-size: 20vh;
+    font-weight: bolder;
+    outline: none;
+    border: none;
+    text-align: center;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: transparent;
+    background-image: linear-gradient(100deg, rgb(0, 66, 121), lightblue);
+    background-clip: text;
+    -webkit-background-clip: text;
+}
+
+h2 {
+    color: white;
+    padding: 0;
+    text-align: center;
+    font-size: 8vh;
+    font-family: "Roboto", sans-serif;
+    text-decoration: underline;
+}
+
+ul {
+    list-style-type: none;
+}
+
+ul li {
+    text-align: center;
+    font-size: 7vh;
+    font-family: "Pangolin", cursive;
+}
+ul li a {
+    color: white;
+    text-decoration: none;
+}
+ul li p {
+    color: white;
+    text-decoration: none;
+    font-size: 5vh;
+}
+
+form {
+    margin: auto;
+    color: black;
+    margin-bottom: 10px;
+    padding: 8px;
+    width: 75%;
+    border: solid 1px white;
+    border-radius: 20px;
+    background-color: grey;
+}
+
+input[type="submit"] {
+    background-color: rgb(0, 73, 0);
+    width: auto;
+    border: solid 1px black;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+.mediacontainer {
+    margin: auto;
+    float: center;
+}
+
+video,
+audio {
+    margin: auto;
+    display: block;
+    float: center;
+    padding: 10px;
+    width: 80%;
+}
+
+.information {
+    text-align: center;
+    font-family: "Pangolin", cursive;
+    font-size: 16vh;
+    margin: 0 0;
+}
+
+.information-lv2 {
+    margin: 0 0;
+    text-align: center;
+    font-family: "Roboto", sans-serif;
+    font-size: 5vh;
+    font-style: oblique;
+    font-weight: bold;
+}
+
+#proceedcontainer {
+    float: center;
+    text-align: center;
+}
+
+#proceed {
+    margin: auto;
+    font-size: 80%;
+    background-color: green;
+    border: 1px solid black;
+    border-radius: 20px;
+    padding: 20px;
+}
+
+#editor {
+    float: center;
+    height: 20vh;
+    max-height: 80vh;
+    max-width: 80vh;
+    margin: auto;
+}
+
+canvas {
+    text-align: center;
+    max-height: 80vh;
+    max-width: 80vh;
+    float: center;
+    display: block;
+}
+
+#plot {
+    margin: auto;
+    float: center;
+    width: 90%;
+}
+
+#plot img {
+    margin: auto;
+    float: center;
+    width: 90%;
+}

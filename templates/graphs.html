@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>AudioVisualizer</title>
+        <link rel="stylesheet" type="text/css" href="static/styles/styles.css" />
+        <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+    </head>
+    <body>
+            <h1>AudioVisualizer</h1>
+            <center>
+            <div id="plot">
+                {%for i in graphs.keys()%}
+                <a href="{{url_for('static', filename='graphs/{}'.format(graphs.get(i)))}}" download={{i}}>
+                <img
+                    id="{{i}}"
+                    src="{{url_for('static', filename='graphs/{}'.format(graphs.get(i)))}}"
+                    style="display: none"
+                    class="imgplot"
+                />
+                </a>
+                {%endfor%}
+            </div>
+            <div id="about"></div>
+            <div id="options"></div>
+            <div class="widgets" id="widgetsid">
+                <input
+                    type="radio"
+                    name="widgetradiobutton"
+                    class="widgetradio"
+                    value="mfcc"
+                    id="mfcc"
+                    checked
+                />MFCC
+                <input
+                    type="radio"
+                    name="widgetradiobutton"
+                    class="widgetradio"
+                    value="waveplot"
+                    id="waveplot"
+                />Waveplot
+                <input
+                    type="radio"
+                    name="widgetradiobutton"
+                    class="widgetradio"
+                    value="spectrogram_linear"
+                    id="spectrogram_linear"
+                />Linear Spectrogram
+                <input
+                    type="radio"
+                    name="widgetradiobutton"
+                    class="widgetradio"
+                    value="give_frames"
+                    id="give_frames"
+                />Frames
+                <input
+                    type="radio"
+                    name="widgetradiobutton"
+                    class="widgetradio"
+                    value="spectral_rolloff"
+                    id="spectral_rolloff"
+                />Spectral Roll-off
+                <button name="applyIt" id="apply">Apply!</button>
+            </div>
+        </center>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script>
+            function aboutThis() {
+                var x = document
+                    .getElementById("plot")
+                    .querySelectorAll(".imgplot");
+                var i;
+                for (i = 0; i < x.length; i++) {
+                    x[i].style.display = "none";
+                }
+                var widget = $(".widgetradio:checked").val();
+                document
+                    .getElementById(widget)
+                    .setAttribute("style", "display:inline");
+                console.log("starting");
+                var text = $(".widgetradio:checked").val();
+                console.log("set");
+                var url = `/about-the-widget?jsdata=${text}`;
+                $.get(url, function (data, status) {
+                    console.log(status);
+                    document.getElementById("about").innerHTML = data;
+                });
+            }
+            $("#apply").click(aboutThis);
+        </script>
+    </body>
+</html>

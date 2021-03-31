@@ -1,0 +1,16 @@
+{ "mfcc": {"name": "Mel Frequency Cepstral Coefficients",
+          "about": "One of the most used features in audio processing and analysis.",
+          "usedfor": ""},
+  "waveplot": {"name": "Waveplot",
+          "about": "It is a plot of amplitude vs time.",
+          "usedfor": ""},
+  "spectrogram_linear": {"name": "Linear Spectrogram",
+          "about": "A spectrogram is a visual way of representing the signal strength (loudness) of a signal over time at various frequencies.",
+          "usedfor": ""},
+  "give_frames": {"name": "",
+          "about": "",
+          "usedfor": ""},
+  "spectral_rolloff": {"name": "Spectral Roll-off",
+          "about": "It is a measure of the shape of the signal. It represents the frequency at which high frequencies decline to 0. ",
+          "usedfor": ""}
+}

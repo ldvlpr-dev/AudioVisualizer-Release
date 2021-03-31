@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Visualizer</title>
+    <link rel="stylesheet" type="text/css" href="../static/styles/styles.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+</head>
+
+<body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <h1>Audio visualizer</h1>
+    <h2>Generate a video</h2>
+    <div hidden id="processing">
+        <p class="information">Processing...</p>
+        <p class="information-lv2">This may take a while</p>
+    </div>
+    <form id="form">
+        <ol>
+            <li>
+                <h3>Choose audio file</h3>
+                <input id="fileinput" type="file" name="file" accept="audio/wav" required />
+            </li>
+            <li>
+                <h3>Choose background image (1280x720 is recommended)</h3>
+                <input id="backgroundinput" type="file" name="background" accept="image/png, image/jpeg" required/>
+            </li>
+            <li>
+                <h3>Enter video FPS</h3>
+                <input type="number" max="60" name="fps" min="15" value="30" placeholder="Video FPS" />
+            </li>
+            <li hidden>
+            <h3>
+                Choose video width and height
+            </h3>
+            <input type="radio" name="dims" value="426x240" required>240p (426x240)</input>
+            <input type="radio" name="dims" value="640x360" required>360p (640x360)</input>
+            <input type="radio" name="dims" value="854x480" required>480p (854x480)</input>
+            <input type="radio" name="dims" value="1280x720" checked required>720p (1280x720)</input>
+            <input type="radio" name="dims" value="1920x1080" required>1080p (1920x1080)</input>
+            </li>
+            <br /><li>
+                <input id="submitbutton" name="nextbutton" type="button" value="Process!" onclick="next()"/>
+            </li>
+            <input hidden id="widgetstring" type="text" value="" name="widgetstring"/>
+        </ol>
+    </form>
+    <div hidden id="editor">
+        <canvas id="canvas" width="1280" height="720"></canvas>
+        <input type="radio" name="type" value="circularBeatVisualizer" checked>Circular beat visualizer</input><br />
+        <input type="radio" name="type" value="freqVolumeBars">All frequencies bars</input><br />
+        <input type="radio" name="type" value="colorWoofer">Colored bass visualizer (woofer)</input><br />
+        <input type="radio" name="type" value="blurryBackground">Blurry background on beat</input><br />
+        <button onclick="addWidget()">Add widget</button><br/>
+        <div id="widgetList"></div>
+        <div id="widgetSettings"></div>
+        <div id="proceedcontainer">
+            <button id="proceed" onclick="proceed()">Proceed</button>
+        </div>
+    </div>
+    <script>
+        function next() {
+            if (document.getElementById("fileinput").files.length == 0 || document.getElementById("backgroundinput").files.length == 0){
+                alert("Missing informations");
+            } else {
+                document.getElementById("form").style.display = "none";
+                document.getElementById("editor").style.display = "block";
+                document.getElementById("canvas").width = $("input[type='radio'][name='dims']:checked").val().split("x")[0];
+                document.getElementById("canvas").height = $("input[type='radio'][name='dims']:checked").val().split("x")[1];
+                redrawCanvas();
+            }
+        }
+        function proceed() {
+            document.getElementById("widgetstring").value = JSON.stringify({widgets:widgets});
+            document.getElementById("editor").style.display = "none";
+            document.getElementById("processing").style.display = "block";
+            form = document.getElementById("form")
+            form.method = "post";
+            form.enctype = "multipart/form-data";
+            form.action = "{{url_for('generate_video')}}";
+            form.submit();
+        }
+        var c = document.getElementById("canvas");
+        var widgets = [];
+        var widgetIndex = -1;
+        // Widget format : [name, x, y]
+        var widgetsSrc  = {
+            circularBeatVisualizer: {
+                props: {
+                    "x": 0,
+                    "y": 0,
+                    "color": "#000000",
+                    "thickness": 14
+                }
+            },
+            freqVolumeBars: {
+                props: {
+                    "direction": "down",
+                    "color": "#000000",
+                    "thickness": 10,
+                    "freqvolumetype": "rectangle",
+                    "max_height": "300",
+                }
+            },
+            colorWoofer: {
+                props: {
+                    "x": 0,
+                    "y": 0,
+                    "primary_color": "#111111",
+                    "secondary_color": "#FFFFFF",
+                    "thickness": 10,
+                    "min_decibel": 300,
+                }
+            },
+            blurryBackground: {
+                props: {}
+            },
+        }
+        const widgetSettings = {
+            "x" : "<p class='property'>X</p><input id='widget-x' type='range' min='0' value='0' max=" + c.width + " onchange='changeWidgetProp(\"x\")'/>",
+            "y" : "<p class='property'>Y</p><input id='widget-y' type='range' min='0' value='0' max=" + c.height + " onchange='changeWidgetProp(\"y\")'/>",
+            "color" : "<p class='property'>Color</p><input id='widget-color' type='color' value='#000000' onchange='changeWidgetProp(\"color\")'/>",
+            "primary_color" : "<p class='property'>Primary color</p><input id='widget-primary_color' type='color' value='#000000' onchange='changeWidgetProp(\"primary_color\")'/>",
+            "secondary_color" : "<p class='property'>Secondary color</p><input id='widget-secondary_color' type='color' value='#000000' onchange='changeWidgetProp(\"secondary_color\")'/>",
+            "thickness": "<p class='property'>Thickness (-1 is for filled)</p><input id='widget-thickness' type='range' min='-1' max='20' onchange='changeWidgetProp(\"thickness\")'/>",
+            "freqvolumetype": "<p class='property'>Type of shapes</p><input type='radio' name='widget-freqvolumetype' value='rectangle' onclick='changeWidgetProp(\"freqvolumetype\")' checked>Rectangular</input><br/><input type='radio' name='widget-freqvolumetype' value='circle' onclick='changeWidgetProp(\"freqvolumetype\")'>Circular</input><br />",
+            "min_decibel": "<p class='property'>Tringgering FPS level</p><input id='widget-min_decibel' type='number' max='600' name='widget-min_decibel' min='15' value='300' placeholder='DB' onchange='changeWidgetProp(\"min_decibel\")'/>",
+            "direction": "<p class='property'>Direction</p><input type='radio' name='widget-direction' value='up' onclick='changeWidgetProp(\"direction\")'>Up</input><br /><input type='radio' name='widget-direction' value='down' onclick='changeWidgetProp(\"direction\")' checked>Down</input><br />",
+            "max_height" : "<p class='property'>Maximum height (between 100 and 700 pixels)</p><input id='widget-max_height' type='range' max='700' name='widget-max_height' min='100' value='300' onchange='changeWidgetProp(\"max_height\")'/>",
+        }
+        for (let key in widgetsSrc) {
+            widgetsSrc[key]["image"] = new Image()
+            widgetsSrc[key]["image"].src = "/static/images/"+key+".png";
+        };
+        var ctx = c.getContext("2d");
+
+        function changeWidgetProp(name) {
+            if (name == "freqvolumetype" || name == "direction") {
+                widgets[widgetIndex][name] = $("input[type='radio'][name='widget-" + name + "']:checked").val()
+            } else {
+                widgets[widgetIndex][name] = document.getElementById("widget-"+name).value;
+            }
+            redrawCanvas();
+        }
+
+        function changeCurrentWidget(index) {
+            widgetIndex = index;
+            settings = document.getElementById("widgetSettings");
+            settings.textContent = "";
+            for (let key in widgetsSrc[widgets[widgetIndex]["name"]]["props"]) {
+                var setting = document.createElement("div");
+                setting.innerHTML = widgetSettings[key];
+                settings.appendChild(setting);
+            };
+        }
+        function addWidget() {
+            var widgetName = $("input[type='radio'][name='type']:checked").val();
+            var radioHtml = '<input type="radio" name="currentWidget" onclick="changeCurrentWidget(' + widgets.length.toString() + ')" checked>' + widgetName + '</input>';
+            var radioElement = document.createElement("div")
+            radioElement.innerHTML = radioHtml;
+            widgets.push({
+                name: widgetName,
+                ...widgetsSrc[widgetName]["props"],
+            })
+            
+            document.getElementById("widgetList").appendChild(radioElement)
+            changeCurrentWidget(widgets.length-1);
+            redrawCanvas();
+        }
+        function redrawCanvas() {
+            ctx.fillStyle = "#919191";
+            ctx.fillRect(0, 0, c.width, c.height);
+            widgets.forEach((item, index) => {
+                ctx.drawImage(widgetsSrc[item["name"]]["image"], ("x" in item) ? item["x"] : 0, ("y" in item) ? item["y"] : 0);
+            });
+        }
+        redrawCanvas();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Results</title>
+        <link rel="stylesheet" type="text/css" href="static/styles/styles.css" />
+        <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+    </head>
+    <body>
+        <h1>Audio visualizer</h1>
+        <h2>Your video is ready!</h2>
+        <div class="mediacontainer">
+            <video
+                id="video_playback"
+                autoplay
+                controls
+                width="1280"
+                height="720"
+                preload="auto"
+            >
+                <source
+                    type="video/mp4"
+                    src="{{url_for('static', filename='GENERATED_VIDEOS/{}'.format(src))}}"
+                />
+            </video>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>AudioVisualizer</title>
+        <link rel="stylesheet" type="text/css" href="../static/styles/styles.css"/>
+        <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+    </head>
+    <body>
+        <h1>Audio visualizer</h1>
+        <ul>
+        <li><a href="{{url_for('graph_audio_upload')}}">Graph visualization</a></li>
+        <li><p>or</p></li>
+        <li><a href="{{url_for('video_form')}}">Video generation</a></li>
+        </ul>
+    </body>
+</html>

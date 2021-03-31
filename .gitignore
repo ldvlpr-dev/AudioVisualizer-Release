@@ -1,0 +1,8 @@
+.venv
+venv
+__pycache__
+.vscode
+.idea
+.py[cod]
+openh264*
+.local
