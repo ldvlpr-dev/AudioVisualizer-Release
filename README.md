@@ -1,7 +1,6 @@
 # Audio Visualizer
 
 A webapp that allows you to visualize Audio with graphs or cool-looking videos.
-Available [online at https://audiovisual-twt.herokuapp.com/](https://audiovisual-twt.herokuapp.com/) or locally.
 
 ## Description
 
@@ -9,17 +8,13 @@ This project was created for the [Timathon](https://twtcodejam.net/) with the th
 This is a Flask webapp that gets information from the audio file the user provides. It is able to generate graphs or let the user place "widgets" on a whiteboard to organize the creation of a video (those widgets can be beat visualizers, frequencies volume visualizers...).
 
 ## How to use
-- [Online at https://audiovisual-twt.herokuapp.com/](https://audiovisual-twt.herokuapp.com/)
+First, clone the repo and open a commandline in the cloned folder. You must have Python installed (tested with 3.8.7).
 
-- Locally by cloning the repo:
+Install pip requirements : `pip install -r requirements.txt`
 
-  First, clone the repo and open a commandline in the cloned folder. You must have Python installed (tested with 3.8.7).
+Run Flask: `flask run`
 
-  Install pip requirements : `pip install -r requirements.txt`
-
-  Run Flask: `flask run`
-
-  And finally, open the address Flask will give you. It should be something like `http://127.0.0.1:5000/`
+And finally, open the address Flask will give you. It should be something like `http://127.0.0.1:5000/`
 
 ## Credits
 
